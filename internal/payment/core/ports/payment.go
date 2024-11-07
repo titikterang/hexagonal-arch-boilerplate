@@ -1,8 +1,11 @@
 package ports
 
-import "context"
+import (
+	"context"
+	"github.com/titikterang/hexagonal-arch-boilerplate/internal/payment/core/models"
+)
 
-type PaymentService interface {
-	Mutation(ctx context.Context) error
-	Transfer(ctx context.Context) error
+// PaymentServiceAdapter - port primary
+type PaymentServiceAdapter interface {
+	TransferUserBalance(ctx context.Context, payload models.TransferBalancePayload) (float64, error)
 }

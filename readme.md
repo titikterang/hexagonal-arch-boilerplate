@@ -10,6 +10,17 @@
 8. Implement Core Business Logic
 9. Testing
 
+# Wallet Service
+------------------------------------------------
+1. Deposit
+   - user_id
+   - amount
+   - hset into redis
+2. Get Balance
+    - user_id
+    - return amount
+    - hgetall from redis
+    - sum all amount from redis
  
 
 # 

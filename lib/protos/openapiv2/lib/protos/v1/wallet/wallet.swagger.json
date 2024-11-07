@@ -54,6 +54,39 @@
           "balance"
         ]
       }
+    },
+    "/v1/wallet/update": {
+      "post": {
+        "summary": "Update Users Balance Info",
+        "operationId": "UpdateUserBalance",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateBalanceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateBalanceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "balance"
+        ]
+      }
     }
   },
   "definitions": {
@@ -94,6 +127,33 @@
           "type": "string"
         },
         "balance": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1UpdateBalanceRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1UpdateBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "finalBalance": {
           "type": "number",
           "format": "double"
         }

@@ -42,10 +42,34 @@ service WalletService {
 
 
   // deposit
+  rpc UpdateUserBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse) {
+    option (google.api.http) = {
+      post: "/v1/wallet/update",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update Users Balance Info";
+      operation_id: "UpdateUserBalance";
+      tags: "balance";
+      responses: {
+        key: "200"
+        value: {
+          description: "OK";
+        }
+      };
+    };
+  }
+}
 
+message  UpdateBalanceRequest {
+  string user_id = 1;
+  double amount = 2;
+}
 
-  // update saldo
-
+message UpdateBalanceResponse {
+  string message = 1;
+  bool success = 2;
+  double final_balance = 3;
 }
 
 message GetBalanceRequest {

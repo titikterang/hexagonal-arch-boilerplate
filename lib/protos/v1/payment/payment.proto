@@ -22,8 +22,33 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service PaymentService {
-  // view mutasi
+  // Cash transfer antar account
+  rpc TransferBalanceService(TransferBalanceRequest) returns (TransferBalanceResponse) {
+    option (google.api.http) = {
+      post: "/v1/payment/transfer",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Transfer Users Balance Amount";
+      operation_id: "TransferBalanceService";
+      tags: "payment";
+      responses: {
+        key: "200"
+        value: {
+          description: "OK";
+        }
+      };
+    };
+  }
+}
 
-  // Cash transfer
+message TransferBalanceRequest {
+  string source_user_id = 1;
+  string destination = 2;
+  double amount = 3;
+}
 
+message TransferBalanceResponse {
+  bool success = 1;
+  double destination_amount = 2;
 }

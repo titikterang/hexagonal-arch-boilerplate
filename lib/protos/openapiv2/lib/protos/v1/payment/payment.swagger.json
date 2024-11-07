@@ -9,6 +9,11 @@
       "email": "azwar.nrst@gmail.com"
     }
   },
+  "tags": [
+    {
+      "name": "PaymentService"
+    }
+  ],
   "schemes": [
     "http"
   ],
@@ -18,7 +23,41 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/payment/transfer": {
+      "post": {
+        "summary": "Transfer Users Balance Amount",
+        "operationId": "TransferBalanceService",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/v1TransferBalanceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TransferBalanceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "payment"
+        ]
+      }
+    }
+  },
   "definitions": {
     "protobufAny": {
       "type": "object",
@@ -47,6 +86,33 @@
             "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1TransferBalanceRequest": {
+      "type": "object",
+      "properties": {
+        "sourceUserId": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1TransferBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "destinationAmount": {
+          "type": "number",
+          "format": "double"
         }
       }
     }

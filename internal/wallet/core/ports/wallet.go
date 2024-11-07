@@ -8,7 +8,7 @@ import (
 // WalletServiceAdapter - port primary
 type WalletServiceAdapter interface {
 	GetUserBalance(ctx context.Context, userID string) (models.BalanceResponse, error)
-	UpdateUserBalance(ctx context.Context, payload models.UpdateBalancePayload) error
+	UpdateUserBalance(ctx context.Context, payload models.UpdateBalancePayload) (float64, error)
 }
 
 // WalletRepositoryAdapter - port secondary

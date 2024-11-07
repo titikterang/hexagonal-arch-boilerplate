@@ -7,7 +7,10 @@
 package payment
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,10 +18,16 @@ import (
 // Requires gRPC-Go v1.62.0 or later.
 const _ = grpc.SupportPackageIsVersion8
 
+const (
+	PaymentService_TransferBalanceService_FullMethodName = "/fastcampus.payment.public.v1.PaymentService/TransferBalanceService"
+)
+
 // PaymentServiceClient is the client API for PaymentService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PaymentServiceClient interface {
+	// Cash transfer antar account
+	TransferBalanceService(ctx context.Context, in *TransferBalanceRequest, opts ...grpc.CallOption) (*TransferBalanceResponse, error)
 }
 
 type paymentServiceClient struct {
@@ -29,10 +38,22 @@ func NewPaymentServiceClient(cc grpc.ClientConnInterface) PaymentServiceClient {
 	return &paymentServiceClient{cc}
 }
 
+func (c *paymentServiceClient) TransferBalanceService(ctx context.Context, in *TransferBalanceRequest, opts ...grpc.CallOption) (*TransferBalanceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransferBalanceResponse)
+	err := c.cc.Invoke(ctx, PaymentService_TransferBalanceService_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PaymentServiceServer is the server API for PaymentService service.
 // All implementations must embed UnimplementedPaymentServiceServer
 // for forward compatibility
 type PaymentServiceServer interface {
+	// Cash transfer antar account
+	TransferBalanceService(context.Context, *TransferBalanceRequest) (*TransferBalanceResponse, error)
 	mustEmbedUnimplementedPaymentServiceServer()
 }
 
@@ -40,6 +61,9 @@ type PaymentServiceServer interface {
 type UnimplementedPaymentServiceServer struct {
 }
 
+func (UnimplementedPaymentServiceServer) TransferBalanceService(context.Context, *TransferBalanceRequest) (*TransferBalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferBalanceService not implemented")
+}
 func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
 
 // UnsafePaymentServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -53,13 +77,36 @@ func RegisterPaymentServiceServer(s grpc.ServiceRegistrar, srv PaymentServiceSer
 	s.RegisterService(&PaymentService_ServiceDesc, srv)
 }
 
+func _PaymentService_TransferBalanceService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferBalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).TransferBalanceService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_TransferBalanceService_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).TransferBalanceService(ctx, req.(*TransferBalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PaymentService_ServiceDesc is the grpc.ServiceDesc for PaymentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PaymentService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "fastcampus.payment.public.v1.PaymentService",
 	HandlerType: (*PaymentServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "lib/protos/v1/payment/payment.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "TransferBalanceService",
+			Handler:    _PaymentService_TransferBalanceService_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "lib/protos/v1/payment/payment.proto",
 }

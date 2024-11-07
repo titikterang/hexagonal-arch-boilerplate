@@ -20,15 +20,19 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationWalletServiceGetUserBalance = "/fastcampus.wallet.public.v1.WalletService/GetUserBalance"
+const OperationWalletServiceUpdateUserBalance = "/fastcampus.wallet.public.v1.WalletService/UpdateUserBalance"
 
 type WalletServiceHTTPServer interface {
 	// GetUserBalance view saldo
 	GetUserBalance(context.Context, *GetBalanceRequest) (*GetBalanceResponse, error)
+	// UpdateUserBalance deposit
+	UpdateUserBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error)
 }
 
 func RegisterWalletServiceHTTPServer(s *http.Server, srv WalletServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/v1/wallet/balance", _WalletService_GetUserBalance0_HTTP_Handler(srv))
+	r.POST("/v1/wallet/update", _WalletService_UpdateUserBalance0_HTTP_Handler(srv))
 }
 
 func _WalletService_GetUserBalance0_HTTP_Handler(srv WalletServiceHTTPServer) func(ctx http.Context) error {
@@ -50,8 +54,31 @@ func _WalletService_GetUserBalance0_HTTP_Handler(srv WalletServiceHTTPServer) fu
 	}
 }
 
+func _WalletService_UpdateUserBalance0_HTTP_Handler(srv WalletServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateBalanceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationWalletServiceUpdateUserBalance)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserBalance(ctx, req.(*UpdateBalanceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateBalanceResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type WalletServiceHTTPClient interface {
 	GetUserBalance(ctx context.Context, req *GetBalanceRequest, opts ...http.CallOption) (rsp *GetBalanceResponse, err error)
+	UpdateUserBalance(ctx context.Context, req *UpdateBalanceRequest, opts ...http.CallOption) (rsp *UpdateBalanceResponse, err error)
 }
 
 type WalletServiceHTTPClientImpl struct {
@@ -69,6 +96,19 @@ func (c *WalletServiceHTTPClientImpl) GetUserBalance(ctx context.Context, in *Ge
 	opts = append(opts, http.Operation(OperationWalletServiceGetUserBalance))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *WalletServiceHTTPClientImpl) UpdateUserBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...http.CallOption) (*UpdateBalanceResponse, error) {
+	var out UpdateBalanceResponse
+	pattern := "/v1/wallet/update"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationWalletServiceUpdateUserBalance))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

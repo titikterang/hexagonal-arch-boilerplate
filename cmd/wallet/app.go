@@ -14,7 +14,7 @@ func main() {
 
 	log.Info("Starting backend service")
 
-	cfg, err := initConfig("wallet.config.json")
+	cfg, err := initConfig("config.wallet")
 	if err != nil {
 		log.Fatalf("failed to parse config, %#v", err)
 	}
