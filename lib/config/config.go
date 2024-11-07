@@ -1,16 +1,23 @@
 package config
 
+import "time"
+
 type Config struct {
-	App   AppConfig   `json:"app"`
-	Redis RedisConfig `json:"redis"`
+	App   AppConfig   `json:"app" mapstructure:"app"`
+	Http  HttpConfig  `json:"http" mapstructure:"http"`
+	Redis RedisConfig `json:"redis" mapstructure:"redis"`
 }
 
 type AppConfig struct {
-	Port  int    `json:"port"`
-	Label string `json:"label"`
+	Address string `json:"address" mapstructure:"address"`
+	Label   string `json:"label" mapstructure:"label"`
+}
+
+type HttpConfig struct {
+	Timeout time.Duration `json:"timeout" mapstructure:"timeout"`
 }
 
 type RedisConfig struct {
-	Host string `json:"host"`
-	Port int    `json:"port"`
+	Address  string `json:"address" mapstructure:"address"`
+	PoolSize int    `json:"poolsize" mapstructure:"poolsize"`
 }

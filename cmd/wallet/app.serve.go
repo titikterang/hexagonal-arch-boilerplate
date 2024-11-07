@@ -1,31 +1,32 @@
 package main
 
 import (
-	"context"
-	kratos "github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	gorHdl "github.com/gorilla/handlers"
-	"github.com/titikterang/amartha-loan-svc/internal/model"
-	hdl "github.com/titikterang/amartha-loan-svc/internal/transport/handler"
-	pbLoan "github.com/titikterang/amartha-loan-svc/protos/loan"
+	"github.com/titikterang/hexagonal-arch-boilerplate/lib/config"
+	pbHandler "github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/wallet"
 )
 
-func startLoanService(ctx context.Context, cfg *model.Config) {
-	uCase, err := InitUseCase(cfg)
-	if err != nil {
-		log.Fatalf("failed run InitUseCase: %v", err)
-	}
+func startService(cfg *config.Config) {
+	redisClient := InitRedis(cfg)
+	defer func() {
+		err := redisClient.Close()
+		if err != nil {
+			log.Fatal("failed to close redis client: %v", err)
+		}
+	}()
 
-	handler, err := hdl.NewHandler(cfg, uCase)
+	handler, err := initHandler(cfg, redisClient)
 	if err != nil {
-		log.Fatalf("failed initiate NewHandler: %v", err)
+		log.Fatal("failed initiate NewHandler: %v", err)
 	}
 
 	httpOpts := []http.ServerOption{
-		http.Timeout(cfg.App.Timeout),
+		http.Timeout(cfg.Http.Timeout),
 		http.Address(cfg.App.Address),
 		http.Filter(
 			gorHdl.CORS(
@@ -45,10 +46,10 @@ func startLoanService(ctx context.Context, cfg *model.Config) {
 		httpOpts...,
 	)
 
-	pbLoan.RegisterLoanServiceHTTPServer(httpServer, handler)
+	pbHandler.RegisterWalletServiceHTTPServer(httpServer, handler)
 
 	server := kratos.New(
-		kratos.Name(cfg.App.Name),
+		kratos.Name(cfg.App.Label),
 		kratos.Server(
 			httpServer,
 		),
