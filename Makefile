@@ -13,10 +13,6 @@ init:
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http@latest
 
-run:
-	@go build -o loan-service ./cmd/*
-	@./loan-service
-
 .PHONY: print
 print:
 	@echo $(API_PROTO_FILES)
