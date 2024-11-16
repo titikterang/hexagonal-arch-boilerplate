@@ -1,6 +1,6 @@
 module github.com/titikterang/hexagonal-arch-boilerplate
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/go-kratos/kratos/contrib/log/zerolog/v2 v2.0.0-20240615052815-46362d1a360d
