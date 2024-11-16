@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/titikterang/hexagonal-arch-boilerplate/internal/wallet/core/ports"
 	"github.com/titikterang/hexagonal-arch-boilerplate/lib/config"
-	pbHandler "github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/wallet"
+	pbHandler "github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/old"
 )
 
 type Handler struct {

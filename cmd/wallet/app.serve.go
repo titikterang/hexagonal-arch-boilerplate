@@ -8,7 +8,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	gorHdl "github.com/gorilla/handlers"
 	"github.com/titikterang/hexagonal-arch-boilerplate/lib/config"
-	pbHandler "github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/wallet"
+	pbHandler "github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/old"
 )
 
 func startService(cfg *config.Config) {

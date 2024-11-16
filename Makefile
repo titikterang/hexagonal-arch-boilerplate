@@ -2,7 +2,7 @@
 export GOPRIVATE=github.com/titikterang
 
 API_PROTO_FILES=$(shell find lib/protos/$(MODULE) -name *.proto -not -path '*/vendor/*')
-API_PROTO_CLIENT=$(shell find lib/protos/openapiv2/$(MODULE) -name *.json -not -path '*/vendor/*')
+API_PROTO_CLIENT=$(shell find lib/protos/openapiv2/lib/protos/$(MODULE) -name *.json -not -path '*/vendor/*' -not -path '*/config/*')
 
 
 init:
@@ -30,7 +30,10 @@ generate:
 			$(API_PROTO_FILES)
 
 generate-js-client:
-	openapi-generator generate -g javascript --additional-properties=usePromises=true -i $(API_PROTO_CLIENT) -o ./protos/client/js/$(MODULE)
+	openapi-generator generate -g javascript --additional-properties=usePromises=true -i $(API_PROTO_CLIENT) -o ./lib/protos/client/js/$(MODULE)
+
+generate-go-client:
+	@openapi-generator generate -g go --additional-properties=packageName=repository -i $(API_PROTO_CLIENT) -o ./lib/protos/client/go/$(MODULE)
 
 test:
 	@echo "===TESTING==="
