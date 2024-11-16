@@ -3,16 +3,16 @@ package handler
 import (
 	"context"
 	"github.com/titikterang/hexagonal-arch-boilerplate/internal/wallet/core/models"
-	"github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/old"
+	"github.com/titikterang/hexagonal-arch-boilerplate/lib/protos/v1/wallet"
 )
 
-func (h *Handler) GetUserBalance(ctx context.Context, in *old.GetBalanceRequest) (*old.GetBalanceResponse, error) {
+func (h *Handler) GetUserBalance(ctx context.Context, in *wallet.GetBalanceRequest) (*wallet.GetBalanceResponse, error) {
 	resp, err := h.walletService.GetUserBalance(ctx, in.GetUserId())
 	if err != nil {
 		/// log err
 		return nil, err
 	}
-	data := &old.GetBalanceResponse{
+	data := &wallet.GetBalanceResponse{
 		UserId:  in.UserId,
 		Balance: resp.AvailableBalance,
 	}
@@ -20,7 +20,7 @@ func (h *Handler) GetUserBalance(ctx context.Context, in *old.GetBalanceRequest)
 	return data, nil
 }
 
-func (h *Handler) UpdateUserBalance(ctx context.Context, in *old.UpdateBalanceRequest) (*old.UpdateBalanceResponse, error) {
+func (h *Handler) UpdateUserBalance(ctx context.Context, in *wallet.UpdateBalanceRequest) (*wallet.UpdateBalanceResponse, error) {
 	var message = "success"
 	amount, err := h.walletService.UpdateUserBalance(ctx, models.UpdateBalancePayload{
 		UserID: in.GetUserId(),
@@ -31,7 +31,7 @@ func (h *Handler) UpdateUserBalance(ctx context.Context, in *old.UpdateBalanceRe
 		message = err.Error()
 	}
 
-	return &old.UpdateBalanceResponse{
+	return &wallet.UpdateBalanceResponse{
 		Message:      message,
 		Success:      err == nil,
 		FinalBalance: amount,
