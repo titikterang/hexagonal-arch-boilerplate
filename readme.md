@@ -12,7 +12,11 @@
 
 # Cara Generate Protobuf
 ------------------------------------------------
-1. Definisikan spec proto di folder `lib/protos/v1/xxxx/xxx.proto`
+1. Di repo ini, menggunakan libprotoc 26.1, untuk cek versi protoc yang terinstall bisa menggunakan command berikut
+   ```shell
+   protoc --version
+   ```
+2. Definisikan spec proto di folder `lib/protos/v1/xxxx/xxx.proto`
 2. Misal untuk wallet di `lib/protos/v1/wallet/wallet.proto`
 3. Lalu jalankan command berikut
    ```shell
