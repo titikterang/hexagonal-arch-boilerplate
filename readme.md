@@ -33,7 +33,7 @@
    ```shell
       MODULE=v1/wallet make generate
    ```
-
- 
-
-# 
+7. Untuk generate file go di semua proto, bisa langsung jalankan command berikut
+   ```shell
+   make generate
+   ```
