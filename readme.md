@@ -31,7 +31,7 @@
 5. Isi dari makefile, pada dasarnya merupakan command di atas yang lebih di rapikan
 6. Untuk generate melalui makefile, misal untuk proto wallet yang ada di folder `lib/protos/v1/wallet/wallet.proto` bisa menggunakan command berikut
    ```shell
-      API_PROTO_FILES=v1/wallet make generate
+      MODULES=v1/wallet make generate
    ```
 
  
